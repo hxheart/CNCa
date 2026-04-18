@@ -1,0 +1,1 @@
+[{"type": "path", "path": [21, 25, 29]}, {"type": "path", "path": [22, 21, 25, 30]}, {"type": "bgp-path", "path": [21, 25, 35, 29]}, {"type": "bgp-path", "path": [22, 25, 38, 30]}]

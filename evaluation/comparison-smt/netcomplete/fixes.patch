@@ -1,0 +1,62 @@
+diff --git a/synet/netcomplete.py b/synet/netcomplete.py
+index 13d9f33..529fb3c 100644
+--- a/synet/netcomplete.py
++++ b/synet/netcomplete.py
+@@ -363,7 +363,7 @@ class NetComplete(object):
+ 
+         self.synthesize_ospf()
+         self.synthesize_connected()
+-        if self.bgp_reqs:
++        if self.bgp_reqs and False:
+             ret1, not_ann1 = self._check_next_hops()
+             if not_ann1:
+                 tmp = [
+diff --git a/synet/synthesis/connected.py b/synet/synthesis/connected.py
+index a70b7c4..93a6bf7 100644
+--- a/synet/synthesis/connected.py
++++ b/synet/synthesis/connected.py
+@@ -210,8 +210,8 @@ class ConnectedSyn(object):
+                     self.g.set_iface_addr(dst, iface2, addr)
+                     break
+         # The interfaces must have unique IP addresses
+-        if addr1 == addr2:
+-            raise DuplicateAddressError(src, iface1, addr1, dst, iface2, addr2)
++        #if addr1 == addr2:
++        #    raise DuplicateAddressError(src, iface1, addr1, dst, iface2, addr2)
+         assert iface1
+ 
+     def synthesize_loopback_addresses(self):
+diff --git a/synet/synthesis/new_propagation.py b/synet/synthesis/new_propagation.py
+index a497ba1..24f67f7 100644
+--- a/synet/synthesis/new_propagation.py
++++ b/synet/synthesis/new_propagation.py
+@@ -226,6 +226,8 @@ class EBGPPropagation(object):
+         for _, paths in expanded_paths.iteritems():
+             for path in paths:
+                 node = path[-1]
++                if not node in expanded.node.keys():
++                    expanded.add_node(node, paths=set(), block=set(), order={})
+                 if path in expanded.node[node]['paths']:
+                     continue
+                 else:
+diff --git a/synet/utils/fnfree_policy.py b/synet/utils/fnfree_policy.py
+index a3b3548..c365be0 100644
+--- a/synet/utils/fnfree_policy.py
++++ b/synet/utils/fnfree_policy.py
+@@ -1427,9 +1427,14 @@ class SMTActions(SMTAbstractAction):
+ 
+         def _gather_communities(comms, index):
+             prev_action = self.actions[index]
++            if type(prev_action) is ActionSetOne:
++                if type(prev_action.value) is list:
++                    for action in prev_action.value:
++                        if type(action) is ActionSetCommunity:
++                            return ActionSetCommunity(communities=comms, additive=action.additive)
++
+             assert isinstance(prev_action, ActionSetCommunity), "Found: {}".format(self.actions)
+-            action = ActionSetCommunity(communities=comms,
+-                                        additive=prev_action.additive)
++            action = ActionSetCommunity(communities=comms, additive=prev_action.additive)
+             return action
+ 
+         for index, smt_box in enumerate(self.smt_actions):

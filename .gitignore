@@ -1,0 +1,7 @@
+tmp-bgp-dataset
+runs
+bgp-ospf-datase*
+*.pyc
+*.ipynb_checkpoint
+jobs
+*.tar.gz
