@@ -1,1 +1,1 @@
-# Enhancing Network Resilience via Agentic AI: Anomaly Detection in Sovereign Network Functions
+# Enhancing Network Resilience via Graph-Based Anomaly Detection in Sovereign Network Functions
